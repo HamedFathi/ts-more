@@ -1,1 +1,1 @@
-export * from "./typed-array";
+export * from "./custom-types";

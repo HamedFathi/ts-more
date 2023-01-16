@@ -1,5 +1,9 @@
 import { TypedArray } from "../types";
 
+export function getType(val: any): string {
+    return Object.prototype.toString.call(val).slice(8, -1);
+}
+
 export function isString(val: any): val is string {
   return typeof val === "string";
 }
@@ -31,9 +35,11 @@ export function isNull(val: any): val is null {
 export function isUndefined(val: any): val is undefined {
   return val === undefined;
 }
+
 export function isStringArray(val: any): val is string[] {
   return Array.isArray(val) && val.every(isString);
 }
+
 export function isNumberArray(val: any): val is number[] {
   return Array.isArray(val) && val.every(isNumber);
 }
@@ -61,6 +67,7 @@ export function isMap(val: any): val is Map<any, any> {
 export function isSet(val: any): val is Set<any> {
   return val instanceof Set;
 }
+
 export function isBigInt(val: any): val is bigint {
   return typeof val === "bigint";
 }
@@ -86,15 +93,19 @@ export function isTypedArray(val: any): val is TypedArray {
 export function isArrayBuffer(val: any): val is ArrayBuffer {
   return val instanceof ArrayBuffer;
 }
+
 export function isReadonlyArray<T>(val: any): val is ReadonlyArray<T> {
   return Array.isArray(val) && Object.isFrozen(val);
 }
+
 export function isType<T>(val: any, type: T): val is T {
   return val === type;
 }
+
 export function isObjectEmpty(obj: object): boolean {
   return Object.keys(obj).length === 0;
 }
+
 export function isLiteral<T extends string | number | boolean>(
   val: any,
   type: T
@@ -108,6 +119,7 @@ export function isUnion<T extends Array<any>>(
 ): val is T[number] {
   return types.some((t) => val instanceof t);
 }
+
 export function isExactUnion<T extends Array<any>>(
   val: any,
   types: T
