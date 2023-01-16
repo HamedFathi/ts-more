@@ -27,6 +27,15 @@ export const chunk = (arr: Array<any>, size: number) => {
     arr.slice(i * size, i * size + size)
   );
 };
+
+export const pipe =
+  (...functions: Function[]) =>
+    (initialValue: any) =>
+      functions.reduce((acc, fn) => fn(acc), initialValue);
+
+export const pipeAsync = (...functions: Array<(initialValue: any) => Promise<any>>) => (x: any) => functions.reduce(async (acc, fn) => await fn(await acc), Promise.resolve(x));
+
+
 export function flatten<T>(items: T[], getChildren: ((item: T) => T[] | undefined) | undefined): T[] {
   const itemsToYield = new Array<T>(...items);
   const result = [];
