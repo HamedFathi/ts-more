@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 export function removeDuplicates<T>(arr: T[]): T[] {
   return Array.from(new Set(arr));
 }
@@ -22,7 +24,7 @@ export function max(arr: number[]): number {
 export function min(arr: number[]): number {
   return Math.min(...arr);
 }
-export const chunk = (arr: Array<any>, size: number) => {
+export const chunk = (arr: Array<unknown>, size: number) => {
   return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size)
   );
@@ -30,13 +32,21 @@ export const chunk = (arr: Array<any>, size: number) => {
 
 export const pipe =
   (...functions: Function[]) =>
-    (initialValue: any) =>
-      functions.reduce((acc, fn) => fn(acc), initialValue);
+  (initialValue: unknown) =>
+    functions.reduce((acc, fn) => fn(acc), initialValue);
 
-export const pipeAsync = (...functions: Array<(initialValue: any) => Promise<any>>) => (x: any) => functions.reduce(async (acc, fn) => await fn(await acc), Promise.resolve(x));
+export const pipeAsync =
+  (...functions: Array<(initialValue: unknown) => Promise<unknown>>) =>
+  (x: unknown) =>
+    functions.reduce(
+      async (acc, fn) => await fn(await acc),
+      Promise.resolve(x)
+    );
 
-
-export function flatten<T>(items: T[], getChildren: ((item: T) => T[] | undefined) | undefined): T[] {
+export function flatten<T>(
+  items: T[],
+  getChildren: ((item: T) => T[] | undefined) | undefined
+): T[] {
   const itemsToYield = new Array<T>(...items);
   const result = [];
   while (itemsToYield.length > 0) {
@@ -55,8 +65,11 @@ export function flatten<T>(items: T[], getChildren: ((item: T) => T[] | undefine
   return result;
 }
 
-export function flattenObject<T>(root: T, getChildren: ((item: T) => T[] | undefined) | undefined): T[] {
-  const result: T[] = []
+export function flattenObject<T>(
+  root: T,
+  getChildren: ((item: T) => T[] | undefined) | undefined
+): T[] {
+  const result: T[] = [];
   if (!root) {
     return result;
   }
@@ -73,8 +86,11 @@ export function flattenObject<T>(root: T, getChildren: ((item: T) => T[] | undef
   return result;
 }
 
-export function flattenRecursively<T>(items: T[], getChildren: ((item: T) => T[] | undefined) | undefined): T[] {
-  const result = []
+export function flattenRecursively<T>(
+  items: T[],
+  getChildren: ((item: T) => T[] | undefined) | undefined
+): T[] {
+  const result = [];
   for (const item of items) {
     result.push(item);
     const children = getChildren?.(item);
