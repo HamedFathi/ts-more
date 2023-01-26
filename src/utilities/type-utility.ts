@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TypedArray } from "../types";
 
 export function getType(val: any): string {
-    return Object.prototype.toString.call(val).slice(8, -1);
+  return Object.prototype.toString.call(val).slice(8, -1);
 }
 
 export function isString(val: any): val is string {
@@ -44,7 +46,7 @@ export function isNumberArray(val: any): val is number[] {
   return Array.isArray(val) && val.every(isNumber);
 }
 
-function isDate(val: any): val is Date {
+export function isDate(val: any): val is Date {
   return val instanceof Date && !isNaN(val.getTime());
 }
 

@@ -5,3 +5,4 @@ export * from "./object-utility";
 export * from "./string-utility";
 export * from "./date-utility";
 export * from "./type-utility";
+export * from "./blob-utility";
