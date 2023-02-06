@@ -35,6 +35,6 @@ export function getFormattedDate(date: string | Date, separator = ".") {
 }
 
 export function getUniqueTimestamp(): number {
-  sleep(50);
+  sleep(100);
   return getTimestamp();
 }
