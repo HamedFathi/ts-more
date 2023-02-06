@@ -1,5 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+export interface JsonObject {
+  [member: string]: string | number | boolean | null | JsonArray | JsonObject;
+}
+export type JsonArray = Array<
+  string | number | boolean | null | JsonArray | JsonObject
+>;
+export type Json = JsonObject | JsonArray | string | number | boolean | null;
+
 export type TypedArray =
   | Int8Array
   | Uint8Array
@@ -15,6 +24,14 @@ export type NonEmptyArray<T> = [T, ...T[]];
 export type RequiredProperties<T, K extends keyof T> = {
   [P in K]-?: T[P];
 };
+export type HTTPMethod =
+  | "GET"
+  | "POST"
+  | "PUT"
+  | "PATCH"
+  | "DELETE"
+  | "OPTIONS"
+  | "HEAD";
 export type Optionalize<T extends K, K> = Omit<T, keyof K>;
 export type Nullable<T> = T | null;
 export type Maybe<T> = T | undefined;

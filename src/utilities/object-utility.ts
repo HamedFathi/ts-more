@@ -21,3 +21,7 @@ export function safeStringify(obj: any, indent?: number): string {
   cache = null;
   return retVal;
 }
+
+export function safeStringifyIntended(obj: any): string {
+  return safeStringify(obj, 2);
+}
