@@ -11,6 +11,6 @@ export function isEven(num: number): boolean {
 export function isOdd(num: number): boolean {
   return !isEven(num);
 }
-export function getRandomNumber(): number {
+export function getRandomNumberByDate(): number {
   return Math.floor(Date.now() * Math.random());
 }

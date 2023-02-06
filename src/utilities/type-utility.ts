@@ -47,7 +47,11 @@ export function isNumberArray(val: any): val is number[] {
 }
 
 export function isDate(val: any): val is Date {
-  return val instanceof Date && !isNaN(val.getTime());
+  return (
+    val &&
+    Object.prototype.toString.call(val) === "[object Date]" &&
+    !isNaN(val)
+  );
 }
 
 export function isRegExp(val: any): val is RegExp {
