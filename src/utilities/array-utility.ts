@@ -32,18 +32,18 @@ export const chunk = (arr: Array<unknown>, size: number) => {
 
 export const pipe =
   (...functions: Function[]) =>
-  (initialValue: unknown) =>
-    functions.reduce((acc, fn) => fn(acc), initialValue);
+    (initialValue: unknown) =>
+      functions.reduce((acc, fn) => fn(acc), initialValue);
 
 export const pipeAsync =
   (...functions: Array<(initialValue: unknown) => Promise<unknown>>) =>
-  (x: unknown) =>
-    functions.reduce(
-      async (acc, fn) => await fn(await acc),
-      Promise.resolve(x)
-    );
+    (x: unknown) =>
+      functions.reduce(
+        async (acc, fn) => await fn(await acc),
+        Promise.resolve(x)
+      );
 
-export function flatten<T>(
+export function flattenArray<T>(
   items: T[],
   getChildren: ((item: T) => T[] | undefined) | undefined
 ): T[] {

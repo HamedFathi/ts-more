@@ -7,3 +7,4 @@ export * from "./date-utility";
 export * from "./type-utility";
 export * from "./blob-utility";
 export * from "./assertions-utility";
+export * from "./promise-utility";

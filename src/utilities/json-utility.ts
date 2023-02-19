@@ -10,6 +10,32 @@ export function isValidJSON(str: string): boolean {
   }
 }
 
+export function getObjectKeyValuePairs(
+  obj: any,
+  separator: string = '.'
+): [string, any][] {
+  return extract(obj, separator);
+  function extract(
+    obj: any,
+    separator: string,
+    parentKey?: string
+  ): [string, any][] {
+    const keys: [string, any][] = [];
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        const value = obj[key];
+        const newKey = parentKey ? `${parentKey}${separator}${key}` : key;
+        if (typeof value === 'object') {
+          keys.push(...extract(value, separator, newKey));
+        } else {
+          keys.push([newKey, value]);
+        }
+      }
+    }
+    return keys;
+  }
+}
+
 export interface JsonPropertyInfo {
   name: string;
   value: any;
@@ -142,4 +168,45 @@ export class JsonUtilities {
     const uniqueValues = [...new Set(values)];
     return uniqueValues;
   }
+}
+
+export function unflatten(data: { [x: string]: any; }) {
+  if (Object(data) !== data || Array.isArray(data))
+    return data;
+  var result: any = {}, cur, prop, parts, idx;
+  for (var p in data) {
+    cur = result, prop = "";
+    parts = p.split(".");
+    for (var i = 0; i < parts.length; i++) {
+      idx = !isNaN(parseInt(parts[i]));
+      cur = cur[prop] || (cur[prop] = (idx ? [] : {}));
+      prop = parts[i];
+    }
+    cur[prop] = data[p];
+  }
+  return result[""];
+}
+
+export function flatten(data: any) {
+  var result: any = {};
+  function recurse(cur: any, prop: any) {
+    if (Object(cur) !== cur) {
+      result[prop] = cur;
+    } else if (Array.isArray(cur)) {
+      for (var i = 0, l = cur.length; i < l; i++)
+        recurse(cur[i], prop ? prop + "." + i : "" + i);
+      if (l == 0)
+        result[prop] = [];
+    } else {
+      var isEmpty = true;
+      for (var p in cur) {
+        isEmpty = false;
+        recurse(cur[p], prop ? prop + "." + p : p);
+      }
+      if (isEmpty)
+        result[prop] = {};
+    }
+  }
+  recurse(data, "");
+  return result;
 }
