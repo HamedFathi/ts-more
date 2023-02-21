@@ -157,10 +157,10 @@ export type PromiseOfArray<T> = Promise<T[]>;
 export type PromiseOfObject<T> = Promise<T>;
 export type FunctionWith<T, U> = T extends (...args: any) => any
   ? FunctionArguments<T> extends U
-  ? T
-  : FunctionReturn<T> extends U
-  ? T
-  : never
+    ? T
+    : FunctionReturn<T> extends U
+    ? T
+    : never
   : never;
 export type PromiseOrValueObject<T> = {
   [K in keyof T]: PromiseOrValueType<T[K]>;
@@ -182,14 +182,14 @@ export type DeepDottedKeys<T, ParentPath extends string = "", Acc = never> = [
   keyof T
 ] extends [never]
   ? Acc
-  : keyof T extends infer K extends (keyof T & string)
+  : keyof T extends infer K extends keyof T & string
   ? K extends any
-  ? DeepDottedKeys<
-    T[K],
-    JoinPaths<ParentPath, K>,
-    Acc | JoinPaths<ParentPath, K>
-  >
-  : never
+    ? DeepDottedKeys<
+        T[K],
+        JoinPaths<ParentPath, K>,
+        Acc | JoinPaths<ParentPath, K>
+      >
+    : never
   : Acc;
 
 export type Result = DeepDottedKeys<{

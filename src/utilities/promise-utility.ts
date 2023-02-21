@@ -1,3 +1,5 @@
+import { getISO8601DateTimeNow } from "./date-utility";
+
 export async function promiseWrap<T>(promise: Promise<T>, finaly?: () => void) {
   try {
     const data = await promise;
@@ -28,6 +30,7 @@ export interface PollingStatus {
   status: boolean;
   interval: number;
   executionTime: number;
+  dateTimeNow: string;
 }
 
 export async function polling(check: () => boolean, option: PollingOption) {
@@ -95,6 +98,17 @@ export async function polling(check: () => boolean, option: PollingOption) {
     const result = check();
     const end = performance.now();
     if (result) {
+      --attempts;
+      if (options.logAction && options.logAction instanceof Function) {
+        options.logAction({
+          attempt: maxAttempts - attempts,
+          maxAttempts: maxAttempts,
+          status: result,
+          interval: currentWaitTime,
+          executionTime: end - start,
+          dateTimeNow: getISO8601DateTimeNow(),
+        });
+      }
       return resolve(result);
     }
     if (attempts < 1) {
@@ -108,7 +122,7 @@ export async function polling(check: () => boolean, option: PollingOption) {
       return;
     }
     if (currentWaitTime) {
-      attempts--;
+      --attempts;
       if (options.logAction && options.logAction instanceof Function) {
         options.logAction({
           attempt: maxAttempts - attempts,
@@ -116,6 +130,7 @@ export async function polling(check: () => boolean, option: PollingOption) {
           status: result,
           interval: currentWaitTime,
           executionTime: end - start,
+          dateTimeNow: getISO8601DateTimeNow(),
         });
       }
       setTimeout(execute, currentWaitTime, resolve, reject);

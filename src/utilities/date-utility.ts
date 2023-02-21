@@ -38,3 +38,18 @@ export function getUniqueTimestamp(): number {
   sleep(100);
   return getTimestamp();
 }
+
+export function getISO8601DateTimeNow(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month =
+    now.getMonth() + 1 < 10 ? `0${now.getMonth() + 1}` : now.getMonth() + 1;
+  const day = now.getDate() < 10 ? `0${now.getDate()}` : now.getDate();
+  const hour = now.getHours() < 10 ? `0${now.getHours()}` : now.getHours();
+  const minute =
+    now.getMinutes() < 10 ? `0${now.getMinutes()}` : now.getMinutes();
+  const second =
+    now.getSeconds() < 10 ? `0${now.getSeconds()}` : now.getSeconds();
+  const millisecond = now.getMilliseconds();
+  return `${year}-${month}-${day}T${hour}:${minute}:${second}.${millisecond}Z`;
+}

@@ -12,7 +12,7 @@ export function isValidJSON(str: string): boolean {
 
 export function getObjectKeyValuePairs(
   obj: any,
-  separator: string = '.'
+  separator = "."
 ): [string, any][] {
   return extract(obj, separator);
   function extract(
@@ -25,7 +25,7 @@ export function getObjectKeyValuePairs(
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
         const value = obj[key];
         const newKey = parentKey ? `${parentKey}${separator}${key}` : key;
-        if (typeof value === 'object') {
+        if (typeof value === "object") {
           keys.push(...extract(value, separator, newKey));
         } else {
           keys.push([newKey, value]);
@@ -170,16 +170,20 @@ export class JsonUtilities {
   }
 }
 
-export function unflatten(data: { [x: string]: any; }) {
-  if (Object(data) !== data || Array.isArray(data))
-    return data;
-  var result: any = {}, cur, prop, parts, idx;
-  for (var p in data) {
-    cur = result, prop = "";
+export function unflatten(data: { [x: string]: any }) {
+  if (Object(data) !== data || Array.isArray(data)) return data;
+  // eslint-disable-next-line prefer-const
+  let result: any = {},
+    cur,
+    prop,
+    parts,
+    idx;
+  for (const p in data) {
+    (cur = result), (prop = "");
     parts = p.split(".");
-    for (var i = 0; i < parts.length; i++) {
+    for (let i = 0; i < parts.length; i++) {
       idx = !isNaN(parseInt(parts[i]));
-      cur = cur[prop] || (cur[prop] = (idx ? [] : {}));
+      cur = cur[prop] || (cur[prop] = idx ? [] : {});
       prop = parts[i];
     }
     cur[prop] = data[p];
@@ -188,23 +192,22 @@ export function unflatten(data: { [x: string]: any; }) {
 }
 
 export function flatten(data: any) {
-  var result: any = {};
+  const result: any = {};
   function recurse(cur: any, prop: any) {
     if (Object(cur) !== cur) {
       result[prop] = cur;
     } else if (Array.isArray(cur)) {
+      // eslint-disable-next-line no-var
       for (var i = 0, l = cur.length; i < l; i++)
         recurse(cur[i], prop ? prop + "." + i : "" + i);
-      if (l == 0)
-        result[prop] = [];
+      if (l == 0) result[prop] = [];
     } else {
-      var isEmpty = true;
-      for (var p in cur) {
+      let isEmpty = true;
+      for (const p in cur) {
         isEmpty = false;
         recurse(cur[p], prop ? prop + "." + p : p);
       }
-      if (isEmpty)
-        result[prop] = {};
+      if (isEmpty) result[prop] = {};
     }
   }
   recurse(data, "");
