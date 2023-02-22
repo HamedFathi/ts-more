@@ -122,3 +122,18 @@ export function groupBy<K, V>(
   });
   return map;
 }
+
+export function cartesian(...args: string[][]) {
+  const result: string[][] = [],
+    max = args.length - 1;
+  function process(arr: string | string[], i: number) {
+    for (let j = 0, l = args[i].length; j < l; j++) {
+      const newArr = arr.slice(0) as string[];
+      newArr.push(args[i][j]);
+      if (i == max) result.push(newArr);
+      else process(newArr, i + 1);
+    }
+  }
+  process([], 0);
+  return result;
+}

@@ -8,3 +8,4 @@ export * from "./type-utility";
 export * from "./blob-utility";
 export * from "./assertions-utility";
 export * from "./promise-utility";
+export * from "./dom-utility";
