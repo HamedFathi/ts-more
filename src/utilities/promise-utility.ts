@@ -13,6 +13,10 @@ export async function promiseWrap<T>(promise: Promise<T>, finaly?: () => void) {
   }
 }
 
+export function toPromise<T>(value: T): Promise<T> {
+  return Promise.resolve(value);
+}
+
 export interface PollingOption {
   attempts?: number;
   timeout?: number;
