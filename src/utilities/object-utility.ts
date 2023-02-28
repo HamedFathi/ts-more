@@ -1,3 +1,4 @@
+/* eslint-disable prefer-rest-params */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function instanceOf(object: any, constructor: any): boolean {
   while (object != null) {
@@ -24,4 +25,8 @@ export function safeStringify(obj: any, indent?: number): string {
 
 export function safeStringifyIntended(obj: any): string {
   return safeStringify(obj, 2);
+}
+
+export function execute<T>(this: any, action: (...args: any[]) => T | void) {
+  return action.bind(this, ...Array.prototype.slice.call(arguments, 1));
 }
