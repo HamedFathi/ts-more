@@ -1,14 +1,17 @@
 import { getISO8601DateTimeNow } from "./date-utility";
 
-export async function promiseWrap<T>(promise: Promise<T>, finaly?: () => void) {
+export async function promiseWrap<T>(
+  promise: Promise<T>,
+  onfinally?: () => void
+) {
   try {
     const data = await promise;
     return [data, undefined];
   } catch (err) {
     return [undefined, err];
   } finally {
-    if (finaly) {
-      finaly();
+    if (onfinally) {
+      onfinally();
     }
   }
 }
@@ -17,6 +20,26 @@ export function toPromise<T>(value: T): Promise<T> {
   return Promise.resolve(value);
 }
 
+type CallbackFunction = (...args: unknown[]) => void;
+type PromisifiedFunction = (...args: unknown[]) => Promise<unknown>;
+
+export const promisify = <T extends CallbackFunction>(
+  fn: T
+): PromisifiedFunction => {
+  return (...args: unknown[]) => {
+    return new Promise((resolve, reject) => {
+      function customCallback(err: Error | null, ...results: unknown[]) {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(results.length === 1 ? results[0] : results);
+      }
+      args.push(customCallback);
+      fn.call(this, ...args);
+    });
+  };
+};
+
 export interface PollingOption {
   attempts?: number;
   timeout?: number;
@@ -24,8 +47,8 @@ export interface PollingOption {
   errorMessage?: string;
   mode: "timeout" | "retry";
   ignoreFailureError?: boolean;
-  postFailureAction?: () => void;
-  logAction?: (status: PollingStatus) => void;
+  postFailureCallback?: () => void;
+  logCallback?: (status: PollingStatus) => void;
 }
 
 export interface PollingStatus {
@@ -43,8 +66,8 @@ export async function polling(check: () => boolean, option: PollingOption) {
     timeout: 5000,
     attempts: 25,
     errorMessage: undefined,
-    logAction: undefined,
-    postFailureAction: undefined,
+    logCallback: undefined,
+    postFailureCallback: undefined,
     mode: "timeout",
     ignoreFailureError: false,
   };
@@ -103,8 +126,8 @@ export async function polling(check: () => boolean, option: PollingOption) {
     const end = performance.now();
     if (result) {
       --attempts;
-      if (options.logAction && options.logAction instanceof Function) {
-        options.logAction({
+      if (options.logCallback && options.logCallback instanceof Function) {
+        options.logCallback({
           attempt: maxAttempts - attempts,
           maxAttempts: maxAttempts,
           status: result,
@@ -117,18 +140,18 @@ export async function polling(check: () => boolean, option: PollingOption) {
     }
     if (attempts < 1) {
       if (
-        options.postFailureAction &&
-        options.postFailureAction instanceof Function
+        options.postFailureCallback &&
+        options.postFailureCallback instanceof Function
       )
-        options.postFailureAction();
+        options.postFailureCallback();
       else if (!options.ignoreFailureError)
         return reject(new Error(option.errorMessage));
       return;
     }
     if (currentWaitTime) {
       --attempts;
-      if (options.logAction && options.logAction instanceof Function) {
-        options.logAction({
+      if (options.logCallback && options.logCallback instanceof Function) {
+        options.logCallback({
           attempt: maxAttempts - attempts,
           maxAttempts: maxAttempts,
           status: result,
