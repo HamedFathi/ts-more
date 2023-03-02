@@ -1,3 +1,7 @@
+import {
+  CallbackFunctionVariadic,
+  CallbackPromiseFunctionVariadicAnyReturn,
+} from "../types";
 import { getISO8601DateTimeNow } from "./date-utility";
 
 export async function promiseWrap<T>(
@@ -20,12 +24,9 @@ export function toPromise<T>(value: T): Promise<T> {
   return Promise.resolve(value);
 }
 
-type CallbackFunction = (...args: unknown[]) => void;
-type PromisifiedFunction = (...args: unknown[]) => Promise<unknown>;
-
-export const promisify = <T extends CallbackFunction>(
+export const promisify = <T extends CallbackFunctionVariadic>(
   fn: T
-): PromisifiedFunction => {
+): CallbackPromiseFunctionVariadicAnyReturn => {
   return (...args: unknown[]) => {
     return new Promise((resolve, reject) => {
       function customCallback(err: Error | null, ...results: unknown[]) {

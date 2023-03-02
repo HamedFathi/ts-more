@@ -209,6 +209,12 @@ export type CallbackFunction = () => void;
 export type CallbackFunctionVariadic = (...args: any[]) => void;
 export type CallbackFunctionVariadicAnyReturn = (...args: any[]) => any;
 
+export type CallbackPromiseFunction = () => Promise<void>;
+export type CallbackPromiseFunctionVariadic = (...args: any[]) => Promise<void>;
+export type CallbackPromiseFunctionVariadicAnyReturn = (
+  ...args: any[]
+) => Promise<any>;
+
 export type Constructor<T> = new (...args: any[]) => T;
 export type Constructor0<T> = new () => T;
 export type Constructor1<T0, T> = new (arg0: T0) => T;
