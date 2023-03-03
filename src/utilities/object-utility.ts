@@ -30,3 +30,7 @@ export function safeStringifyIntended(obj: any): string {
 export function execute<T>(this: any, action: (...args: any[]) => T | void) {
   return action.bind(this, ...Array.prototype.slice.call(arguments, 1));
 }
+
+export const createPartial = <T>(partial: Partial<T>): T => {
+  return partial as T;
+};
