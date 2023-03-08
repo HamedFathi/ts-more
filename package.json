@@ -1,6 +1,6 @@
 {
   "name": "ts-more",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A collection of helpful utilities, types, and decorators for TypeScript/JavaScript projects.",
   "keywords": [
     "utilities",

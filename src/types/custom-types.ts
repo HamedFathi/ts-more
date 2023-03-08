@@ -20,6 +20,10 @@ export type TypedArray =
   | Float32Array
   | Float64Array;
 
+export type Mutable<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+
 export type NonEmptyArray<T> = [T, ...T[]];
 export type RequiredProperties<T, K extends keyof T> = {
   [P in K]-?: T[P];
