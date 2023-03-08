@@ -196,7 +196,7 @@ export type DeepDottedKeys<T, ParentPath extends string = "", Acc = never> = [
     : never
   : Acc;
 
-export type Result = DeepDottedKeys<{
+export type ResultKeys = DeepDottedKeys<{
   idle: unknown;
   loading: unknown;
   other: {
@@ -208,6 +208,11 @@ export type Result = DeepDottedKeys<{
     another: {};
   };
 }>;
+
+export interface Result<T> {
+  value: T | Error;
+  hasError: boolean;
+}
 
 export type CallbackFunction = () => void;
 export type CallbackFunctionVariadic = (...args: any[]) => void;

@@ -1,6 +1,6 @@
 {
   "name": "ts-more",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "A collection of helpful utilities, types, and decorators for TypeScript/JavaScript projects.",
   "keywords": [
     "utilities",
@@ -39,7 +39,8 @@
     "build": "rimraf dist && tsc && tsc --build tsconfig.commonjs.json",
     "lint": "eslint . --fix",
     "lint-build": "npm run lint && npm run build",
-	"doc": "rimraf docs && typedoc src/index.ts --excludeExternals --externalPattern \"**/node_modules/**\""
+    "doc": "rimraf docs && typedoc src/index.ts --excludeExternals --externalPattern \"**/node_modules/**\"",
+    "aio": "npm run lint-build && npm run doc"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.53.0",
@@ -50,6 +51,6 @@
     "prettier": "^2.8.4",
     "rimraf": "~3.0.2",
     "typescript": "~4.9.5",
-	"typedoc": "^0.23.25"
+    "typedoc": "^0.23.25"
   }
 }
