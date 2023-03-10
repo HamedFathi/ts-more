@@ -47,8 +47,8 @@ export interface PollingOption {
   interval?: number | number[];
   errorMessage?: string;
   mode: "timeout" | "retry";
-  ignoreFailureError?: boolean;
-  postFailureCallback?: () => void;
+  ignoreFailureException?: boolean;
+  postFailureCallback?: () => boolean | void;
   logCallback?: (status: PollingStatus) => void;
 }
 
@@ -70,7 +70,7 @@ export async function polling(check: () => boolean, option: PollingOption) {
     logCallback: undefined,
     postFailureCallback: undefined,
     mode: "timeout",
-    ignoreFailureError: false,
+    ignoreFailureException: false,
   };
   const options = { ...defaultOption, ...option };
   let attempts = 0;
@@ -109,8 +109,10 @@ export async function polling(check: () => boolean, option: PollingOption) {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const execute = async (resolve: (arg0: boolean) => any, reject: any) => {
+  const execute = async (
+    resolve: (arg0: boolean) => unknown,
+    reject: (arg0: string) => unknown
+  ) => {
     let currentWaitTime = 0;
     if (Array.isArray(options.interval)) {
       if (options.interval.length > 1) {
@@ -143,10 +145,13 @@ export async function polling(check: () => boolean, option: PollingOption) {
       if (
         options.postFailureCallback &&
         options.postFailureCallback instanceof Function
-      )
-        options.postFailureCallback();
-      else if (!options.ignoreFailureError)
-        return reject(new Error(option.errorMessage));
+      ) {
+        const fnResult = options.postFailureCallback();
+        if (fnResult === true || fnResult === false) {
+          return resolve(fnResult);
+        }
+      } else if (!options.ignoreFailureException)
+        return reject(<string>option.errorMessage);
       return;
     }
     if (currentWaitTime) {
